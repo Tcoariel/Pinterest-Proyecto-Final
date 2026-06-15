@@ -45,7 +45,7 @@
           <p id="pub-descripcion">Cargando descripción...</p>
           <p class="meta-user">Subido por: <strong id="pub-usuario">---</strong></p>
           
-          <button class="btn-reportar" id="btn-reportar-pin">⚠️ Reportar Contenido Inapropiado</button>
+          <button class="btn-reportar" id="btn-reportar-pin"> Reportar Contenido Inapropiado</button>
           
           <div class="divider"></div>
           
@@ -65,7 +65,7 @@
     let idPub = urlParams.get("id");
     let sessionUserId = localStorage.getItem("usuario_id");
 
-    $.get("/publicacion/" + idPub, function(pub){ // ◄--- MODIFICADO (Ruta Relativa)
+    $.get("/publicacion/" + idPub, function(pub){ 
         if(pub) {
             $("#pub-titulo").text(pub.titulo);
             $("#pub-descripcion").text(pub.descripcion ? pub.descripcion : "Sin descripción.");
@@ -81,7 +81,7 @@
 
     function cargarComentarios() {
         $("#lista-comentarios").empty();
-        $.get("/comentarios/" + idPub, function(comentarios){ // ◄--- MODIFICADO (Ruta Relativa)
+        $.get("/comentarios/" + idPub, function(comentarios){ 
             if(!comentarios || comentarios.length === 0){
                 $("#lista-comentarios").append($("<p>").text("Aún no hay comentarios.").css("color","#767676"));
                 return;
@@ -115,7 +115,7 @@
             fd.append("publicacion_id", idPub);
 
             $.ajax({
-                url: "/comentario", // ◄--- MODIFICADO (Ruta Relativa)
+                url: "/comentario", 
                 type: "POST",
                 data: fd,
                 processData: false,
