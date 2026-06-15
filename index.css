@@ -1,0 +1,218 @@
+:root {
+  --pinterest-red: #e60023;
+  --bg-gray: #f7f7f7;
+  --text-dark: #111111;
+  --border-color: #e1e1e1;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: #ffffff;
+  color: var(--text-dark);
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- SIDEBAR (Menú superior en móvil, lateral en PC) --- */
+.sidebar {
+  background-color: #ffffff;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.logo {
+  color: var(--pinterest-red);
+  margin: 0;
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.menu-items {
+  display: flex;
+  gap: 8px;
+}
+
+.menu-items a {
+  text-decoration: none;
+  color: #5f5f5f;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 16px;
+  border-radius: 24px;
+  transition: all 0.2s;
+}
+
+.menu-items a:hover {
+  background-color: #f0f0f0;
+  color: var(--text-dark);
+}
+
+.menu-items a.active {
+  background-color: var(--text-dark);
+  color: #ffffff;
+}
+
+/* --- CONTENIDO --- */
+.main-content {
+  flex: 1;
+  padding: 16px;
+}
+
+/* --- BARRA DE PUBLICACIÓN ESTILO CLEAN --- */
+.top-header {
+  background-color: #ffffff;
+  padding: 16px 20px;
+  border-radius: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  border: 1px solid var(--border-color);
+}
+
+.form-crear {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-crear input[type="text"] {
+  padding: 12px 18px;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  font-size: 14px;
+  outline: none;
+  background-color: var(--bg-gray);
+}
+
+.form-crear input[type="text"]:focus {
+  border-color: #a7a7a7;
+  background-color: #ffffff;
+}
+
+/* Selector de archivos personalizado */
+.form-crear input[type="file"] {
+  display: none;
+}
+
+.upload-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-file {
+  background-color: #f0f0f0;
+  padding: 10px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 13px;
+  cursor: pointer;
+  color: #444;
+}
+
+.btn-file:hover { background-color: #e4e4e4; }
+
+#nombre-archivo {
+  font-size: 13px;
+  color: #767676;
+}
+
+.form-crear button {
+  background-color: var(--pinterest-red);
+  color: #ffffff;
+  border: none;
+  padding: 12px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.form-crear button:hover { background-color: #ad001a; }
+
+/* --- GRILLA FLUIDA (MASONRY REAL) --- */
+.grid {
+  column-count: 2;
+  column-gap: 16px;
+}
+
+.pin-card {
+  background-color: #ffffff;
+  margin-bottom: 16px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+  cursor: pointer;
+  break-inside: avoid;
+  border: 1px solid #f0f0f0;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.pin-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.07);
+}
+
+.pin-card img {
+  width: 100%;
+  display: block;
+}
+
+.pin-card p {
+  padding: 12px 14px;
+  margin: 0;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* --- RESPONSIVE TABLETS --- */
+@media (min-width: 650px) {
+  .grid { column-count: 3; }
+}
+
+/* --- RESPONSIVE PC (Muestra todo tu potencial visual) --- */
+@media (min-width: 1024px) {
+  .app-container { flex-direction: row; }
+
+  .sidebar {
+    width: 200px;
+    height: 100vh;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 32px;
+    border-right: 1px solid var(--border-color);
+    border-bottom: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 36px 24px;
+  }
+
+  .menu-items {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .menu-items a { display: block; width: 85%; }
+  .main-content { margin-left: 200px; padding: 32px; }
+
+  /* El formulario se alinea automáticamente en horizontal en PC */
+  .form-crear {
+    flex-direction: row;
+    align-items: center;
+  }
+  .form-crear input[type="text"] { flex: 2; }
+  .upload-wrapper { flex: 1.5; }
+  .form-crear button { padding: 12px 28px; }
+
+  .grid { column-count: 5; }
+}

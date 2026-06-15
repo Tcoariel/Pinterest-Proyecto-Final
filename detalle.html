@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pinterest - Detalle</title>
+  <link rel="stylesheet" href="detalle.css">
+  <style>
+    .btn-reportar {
+      background-color: #f0f0f0;
+      color: #767676;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 12px;
+      align-self: flex-start;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-reportar:hover {
+      background-color: #e1e1e1;
+      color: #111111;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <nav class="sidebar">
+      <h2 class="logo" onclick="window.location.href='index.html'" style="cursor:pointer;">P</h2>
+      <a href="index.html" class="btn-back">← Volver al Inicio</a>
+    </nav>
+
+    <main class="main-content">
+      <div class="card-detalle">
+        
+        <div class="box-imagen">
+          <img id="pub-imagen" src="" alt="Cargando recurso...">
+        </div>
+
+        <div class="box-info">
+          <h1 id="pub-titulo">Cargando...</h1>
+          <p id="pub-descripcion">Cargando descripción...</p>
+          <p class="meta-user">Subido por: <strong id="pub-usuario">---</strong></p>
+          
+          <button class="btn-reportar" id="btn-reportar-pin">⚠️ Reportar Contenido Inapropiado</button>
+          
+          <div class="divider"></div>
+          
+          <h3>Comentarios</h3>
+          <div id="lista-comentarios"></div>
+
+          <div id="bloque-comentar"></div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script>
+    let urlParams = new URLSearchParams(window.location.search);
+    let idPub = urlParams.get("id");
+    let sessionUserId = localStorage.getItem("usuario_id");
+
+    $.get("/publicacion/" + idPub, function(pub){ // ◄--- MODIFICADO (Ruta Relativa)
+        if(pub) {
+            $("#pub-titulo").text(pub.titulo);
+            $("#pub-descripcion").text(pub.descripcion ? pub.descripcion : "Sin descripción.");
+            $("#pub-imagen").attr("src", pub.imagen);
+            $("#pub-usuario").text(pub.autor_nombre);
+        }
+    });
+
+    $("#btn-reportar-pin").click(function(){
+        alert("Transparencia del Sistema: Este Pin ha sido enviado temporalmente a revisión. Nuestro equipo de moderación humana verificará el contenido bajo nuestras políticas de convivencia en menos de 24 horas.");
+        $(this).text("Pin Reportado").attr("disabled", true).css({"background-color": "#ffebe6", "color": "#e60023", "cursor": "default"});
+    });
+
+    function cargarComentarios() {
+        $("#lista-comentarios").empty();
+        $.get("/comentarios/" + idPub, function(comentarios){ // ◄--- MODIFICADO (Ruta Relativa)
+            if(!comentarios || comentarios.length === 0){
+                $("#lista-comentarios").append($("<p>").text("Aún no hay comentarios.").css("color","#767676"));
+                return;
+            }
+            for(let i = 0; i < comentarios.length; i++) {
+                let $box = $("<div>").addClass("item-comentario");
+                let $user = $("<strong>").text(comentarios[i][2] + ": ");
+                let $msg = $("<span>").text(comentarios[i][1]);
+                
+                $box.append($user).append($msg);
+                $("#lista-comentarios").append($box);
+            }
+        });
+    }
+
+    if(sessionUserId) {
+        let $group = $("<div>").addClass("input-comentario-group");
+        let $input = $("<input>").attr({"type": "text", "id": "texto-comentario", "placeholder": "Añade un comentario público..."});
+        let $btn = $("<button>").text("Enviar");
+
+        $group.append($input).append($btn);
+        $("#bloque-comentar").append($group);
+
+        $btn.click(function(){
+            let comentarioTxt = $input.val().trim();
+            if(!comentarioTxt) return;
+
+            let fd = new FormData();
+            fd.append("comentario", comentarioTxt);
+            fd.append("usuario_id", sessionUserId);
+            fd.append("publicacion_id", idPub);
+
+            $.ajax({
+                url: "/comentario", // ◄--- MODIFICADO (Ruta Relativa)
+                type: "POST",
+                data: fd,
+                processData: false,
+                contentType: false,
+                success: function() {
+                    $input.val("");
+                    cargarComentarios();
+                }
+            });
+        });
+    } else {
+        let $aviso = $("<p>").text("Debes iniciar sesión para dejar un comentario. ").css({"font-size": "14px", "color": "#767676", "font-weight":"bold"});
+        let $btnGo = $("<a>").attr("href", "login.html").text("Ir al Login").css({"color": "#e60023", "text-decoration": "none", "margin-left": "10px"});
+        $aviso.append($btnGo);
+        $("#bloque-comentar").append($aviso);
+    }
+
+    cargarComentarios();
+  </script>
+</body>
+</html>

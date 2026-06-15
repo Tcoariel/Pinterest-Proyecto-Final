@@ -1,0 +1,211 @@
+:root {
+  --pinterest-red: #e60023;
+  --bg-gray: #f7f7f7;
+  --text-dark: #111111;
+  --border-color: #e1e1e1;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: #ffffff;
+  color: var(--text-dark);
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- SIDEBAR REUTILIZADO (Alineación superior en móvil, lateral en PC) --- */
+.sidebar {
+  background-color: #ffffff;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.logo {
+  color: var(--pinterest-red);
+  margin: 0;
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.menu-items {
+  display: flex;
+  gap: 8px;
+}
+
+.menu-items a {
+  text-decoration: none;
+  color: #5f5f5f;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 16px;
+  border-radius: 24px;
+  transition: all 0.2s;
+}
+
+.menu-items a:hover {
+  background-color: #f0f0f0;
+  color: var(--text-dark);
+}
+
+.menu-items a.active {
+  background-color: var(--text-dark);
+  color: #ffffff;
+}
+
+/* --- CONTENIDO PRINCIPAL --- */
+.main-content {
+  flex: 1;
+  padding: 24px;
+}
+
+/* --- CABECERA DE PERFIL ESTILO PINTEREST --- */
+.profile-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px 0 30px 0;
+}
+
+/* Círculo del avatar estilizado con la inicial */
+.profile-avatar {
+  width: 90px;
+  height: 90px;
+  background-color: #f0f0f0;
+  color: var(--text-dark);
+  border-radius: 50%;
+  font-size: 32px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  border: 1px solid var(--border-color);
+}
+
+.profile-header h1 {
+  font-size: 30px;
+  margin: 0 0 6px 0;
+  font-weight: 800;
+}
+
+.profile-header p {
+  font-size: 14px;
+  color: #767676;
+  margin: 0 0 16px 0;
+}
+
+.btn-logout {
+  background-color: #efefef;
+  color: var(--text-dark);
+  border: none;
+  padding: 12px 20px;
+  border-radius: 24px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-logout:hover {
+  background-color: #e1e1e1;
+}
+
+.divider {
+  height: 1px;
+  background-color: var(--border-color);
+  margin-bottom: 30px;
+}
+
+.user-content {
+  width: 100%;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+/* --- GRILLA EN CASCADA (MÓVIL) --- */
+.grid {
+  column-count: 2;
+  column-gap: 16px;
+}
+
+.pin-card {
+  background-color: #ffffff;
+  margin-bottom: 16px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+  cursor: pointer;
+  break-inside: avoid;
+  border: 1px solid #f0f0f0;
+  transition: transform 0.2s;
+}
+
+.pin-card:hover {
+  transform: translateY(-2px);
+}
+
+.pin-card img {
+  width: 100%;
+  display: block;
+}
+
+.pin-card p {
+  padding: 12px 14px;
+  margin: 0;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* --- ADAPTACIÓN TABLETS --- */
+@media (min-width: 650px) {
+  .grid { column-count: 3; }
+}
+
+/* --- ADAPTACIÓN AUTOMÁTICA PC --- */
+@media (min-width: 1024px) {
+  .app-container { flex-direction: row; }
+
+  /* El menú se fija limpiamente a la izquierda de la grilla */
+  .sidebar {
+    width: 200px;
+    height: 100vh;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 32px;
+    border-right: 1px solid var(--border-color);
+    border-bottom: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 36px 24px;
+  }
+
+  .menu-items {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .menu-items a { display: block; width: 85%; }
+  
+  .main-content { 
+    margin-left: 200px; 
+    padding: 40px; 
+  }
+
+  .grid { column-count: 4; }
+}

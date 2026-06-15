@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pinterest - Perfil</title>
+  <link rel="stylesheet" href="usuario.css">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <nav class="sidebar">
+      <div class="logo-box">
+        <h2 class="logo" onclick="window.location.href='index.html'" style="cursor:pointer;">P</h2>
+      </div>
+      <div class="menu-items">
+        <a href="index.html">Inicio</a>
+        <a href="login.html">Login</a>
+        <a href="register.html">Registro</a>
+        <a href="#" class="active">Perfil</a>
+      </div>
+    </nav>
+
+    <div class="main-content">
+      
+      <header class="profile-header">
+        <div class="profile-avatar" id="avatar-letra">U</div>
+        <h1 id="user-nombre">Cargando usuario...</h1>
+        <p id="user-correo">cargando@correo.com</p>
+        <button class="btn-logout" id="btn-cerrar-sesion">Cerrar Sesión</button>
+      </header>
+
+      <div class="divider"></div>
+
+      <section class="user-content">
+        <h3 class="section-title">Mis Pines publicados</h3>
+        <main class="grid" id="mis-pines"></main>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script>
+    let urlParams = new URLSearchParams(window.location.search);
+    let idUsuarioPerfil = urlParams.get("id");
+    let miIdSesion = localStorage.getItem("usuario_id");
+
+    if (!idUsuarioPerfil) {
+        if (miIdSesion) {
+            window.location.href = "usuario.html?id=" + miIdSesion;
+        } else {
+            window.location.href = "login.html";
+        }
+    }
+
+    if (idUsuarioPerfil !== miIdSesion) {
+        $("#btn-cerrar-sesion").hide();
+    }
+
+    $.get("/usuario/" + idUsuarioPerfil, function(usuario){ // ◄--- MODIFICADO (Ruta Relativa)
+        if(usuario && !usuario.mensaje) {
+            $("#user-nombre").text(usuario.nombre);
+            $("#user-correo").text(usuario.correo);
+            
+            let primeraLetra = usuario.nombre.charAt(0).toUpperCase();
+            $("#avatar-letra").text(primeraLetra);
+        } else {
+            $("#user-nombre").text("Usuario no encontrado");
+            $("#user-correo").text("---");
+        }
+    });
+
+    $.get("/usuario_publicaciones/" + idUsuarioPerfil, function(pines){ // ◄--- MODIFICADO (Ruta Relativa)
+        $("#mis-pines").empty();
+        
+        if(!pines || pines.length === 0) {
+            let $noPines = $("<p>").text("Este usuario aún no ha publicado ningún Pin.").css({
+                "text-align": "center",
+                "width": "100%",
+                "color": "#767676",
+                "font-weight": "bold",
+                "margin-top": "20px"
+            });
+            $("#mis-pines").append($noPines);
+            return;
+        }
+
+        for(let i = 0; i < pines.length; i++) {
+            let idPin = pines[i].id;
+            let titulo = pines[i].titulo;
+            let urlImagen = pines[i].imagen;
+
+            let $card = $("<div>").addClass("pin-card");
+            let $img = $("<img>").attr("src", urlImagen);
+            let $title = $("<p>").text(titulo);
+
+            $card.append($img).append($title);
+
+            $card.click(function(){
+                window.location.href = "detalle.html?id=" + idPin;
+            });
+
+            $("#mis-pines").append($card);
+        }
+    });
+
+    $("#btn-cerrar-sesion").click(function(){
+        localStorage.clear();
+        alert("Has cerrado sesión.");
+        window.location.href = "login.html";
+    });
+  </script>
+</body>
+</html>

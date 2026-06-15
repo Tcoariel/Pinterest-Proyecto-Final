@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Pinterest</title>
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Iniciar Sesión</h2>
+        <input type="email" id="correo" placeholder="Correo">
+        <input type="password" id="password" placeholder="Contraseña">
+        <button id="entrar">Entrar</button>
+        <a href="register.html">Crear cuenta</a>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+    $("#entrar").click(function(){
+        let formData = new FormData();
+        formData.append("correo", $("#correo").val());
+        formData.append("password", $("#password").val());
+
+        $.ajax({
+            url: "/login", // ◄--- MODIFICADO (Ruta Relativa)
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(respuesta){
+                if(respuesta && respuesta.mensaje !== "error"){
+                    localStorage.setItem("usuario_id", respuesta.id);
+                    localStorage.setItem("usuario_nombre", respuesta.nombre);
+                    window.location.href = "index.html";
+                } else {
+                    alert("Credenciales incorrectas.");
+                }
+            }
+        });
+    });
+    </script>
+</body>
+</html>

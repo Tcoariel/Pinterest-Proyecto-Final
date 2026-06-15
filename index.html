@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pinterest - Inicio</title>
+  <link rel="stylesheet" href="index.css">
+  <style>
+    .categories-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+    .btn-cat {
+      background-color: #f0f0f0;
+      color: #111111;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-cat:hover, .btn-cat.active {
+      background-color: #111111;
+      color: #ffffff;
+    }
+    .form-crear select {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #e1e1e1;
+      font-size: 14px;
+      background-color: #fff;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <nav class="sidebar">
+      <div class="logo-box"><h2 class="logo">P</h2></div>
+      <div class="menu-items">
+        <a href="index.html" class="active">Inicio</a>
+        <a href="login.html">Login</a>
+        <a href="register.html">Registro</a>
+        <a id="link-perfil" href="#">Perfil</a>
+      </div>
+    </nav>
+
+    <div class="main-content">
+      <header class="top-header" id="bloque-publicacion"></header>
+
+      <div class="categories-bar">
+        <button class="btn-cat active" data-categoria="Todos">Todos</button>
+        <button class="btn-cat" data-categoria="Paisajes">Paisajes</button>
+        <button class="btn-cat" data-categoria="Juegos">Juegos</button>
+        <button class="btn-cat" data-categoria="Tecnología">Tecnología</button>
+        <button class="btn-cat" data-categoria="Otros">Otros</button>
+      </div>
+
+      <main class="grid" id="feed-pines"></main>
+
+      <footer style="margin-top: 60px; padding: 24px; text-align: center; border-top: 1px solid #e1e1e1; font-size: 13px; color: #767676; background-color: #fafafa; border-radius: 16px;">
+          <p style="margin: 0 0 8px 0; font-weight: bold; color: #111111;">© 2026 Pinterest Académico - Ingeniería en Sistemas UIDE.</p>
+          <p style="max-width: 650px; margin: 0 auto; line-height: 1.5;">
+              <strong>Política de Tratamiento de Datos:</strong> Las imágenes subidas por nuestra comunidad se almacenan en infraestructura en la nube encriptada a través de AWS S3 (us-east-2). Nos comprometemos éticamente a garantizar la total privacidad de tu información: tus fotos jamás serán comercializadas con terceros ni utilizadas para el entrenamiento de modelos de Inteligencia Artificial sin tu consentimiento explícito.
+          </p>
+      </footer>
+
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script>
+    let usuarioLogueado = localStorage.getItem("usuario_id");
+    let todosLosPines = []; 
+
+    if(usuarioLogueado) {
+        $("#link-perfil").attr("href", "usuario.html?id=" + usuarioLogueado);
+
+        let $form = $("<div>").addClass("form-crear");
+        let $inputTitulo = $("<input>").attr({"type":"text", "id":"titulo", "placeholder":"Título de tu Pin..."});
+        let $inputDesc = $("<input>").attr({"type":"text", "id":"descripcion", "placeholder":"Añade una descripción corta..."});
+        
+        let $selectCat = $("<select>").attr("id", "categoria");
+        $selectCat.append(new Option("Paisajes", "Paisajes"));
+        $selectCat.append(new Option("Juegos", "Juegos"));
+        $selectCat.append(new Option("Tecnología", "Tecnología"));
+        $selectCat.append(new Option("Otros", "Otros"));
+
+        let $wrapper = $("<div>").addClass("upload-wrapper");
+        let $labelFile = $("<label>").attr("for", "imagen-file").addClass("btn-file").text("📁 Seleccionar Imagen");
+        let $inputFile = $("<input>").attr({"type":"file", "id":"imagen-file", "accept":"image/*"});
+        let $spanFile = $("<span>").attr("id", "nombre-archivo").text("Ningún archivo");
+        $wrapper.append($labelFile).append($inputFile).append($spanFile);
+
+        let $btnSubir = $("<button>").attr("id", "publicar").text("Subir Pin");
+
+        $form.append($inputTitulo).append($inputDesc).append($selectCat).append($wrapper).append($btnSubir);
+        $("#bloque-publicacion").append($form);
+
+        $inputFile.change(function(){
+            let txt = this.files[0] ? this.files[0].name : "Ningún archivo";
+            $("#nombre-archivo").text(txt);
+        });
+
+        $btnSubir.click(function(){
+            let fileObj = $("#imagen-file")[0].files[0];
+            let tituloTxt = $("#titulo").val().trim();
+            let descTxt = $("#descripcion").val().trim();
+            let catTxt = $("#categoria").val();
+
+            if(!fileObj || !tituloTxt) {
+                alert("El título y la imagen son requeridos para subir un Pin.");
+                return;
+            }
+
+            let fd = new FormData();
+            fd.append("titulo", tituloTxt);
+            fd.append("descripcion", descTxt);
+            fd.append("categoria", catTxt);
+            fd.append("usuario_id", usuarioLogueado);
+            fd.append("file", fileObj);
+
+            $.ajax({
+                url: "/publicacion", // ◄--- MODIFICADO (Ruta Relativa)
+                type: "POST",
+                data: fd,
+                processData: false,
+                contentType: false,
+                success: function(respuesta){
+                    if(respuesta.mensaje === "publicacion creada") {
+                        alert("¡Pin creado e indexado!");
+                        location.reload();
+                    } else {
+                        alert("Error: " + respuesta.detalle);
+                    }
+                },
+                error: function() {
+                    alert("Error en el servidor al intentar subir la imagen.");
+                }
+            });
+        });
+
+    } else {
+        $("#link-perfil").attr("href", "login.html");
+        
+        let $mensajeBox = $("<div>").css({"text-align": "center", "width": "100%", "padding": "10px 0"});
+        let $textoMsg = $("<span>").text("¡Únete a nuestra comunidad para subir tus propias ideas! ").css({"font-weight": "bold", "margin-right":"15px"});
+        let $btnIrLogin = $("<button>").text("Iniciar Sesión").css({
+            "background-color": "#e60023", "color": "white", "border": "none", 
+            "padding": "10px 20px", "border-radius": "20px", "font-weight": "bold", "cursor": "pointer"
+        }).click(function(){ window.location.href = "login.html"; });
+
+        $mensajeBox.append($textoMsg).append($btnIrLogin);
+        $("#bloque-publicacion").append($mensajeBox);
+    }
+
+    function renderizarPines(categoriaFiltro) {
+        $("#feed-pines").empty();
+        
+        for(let i = 0; i < todosLosPines.length; i++) {
+            let id = todosLosPines[i].id;
+            let titulo = todosLosPines[i].titulo;
+            let urlS3 = todosLosPines[i].imagen;
+            let categoriaPin = todosLosPines[i].categoria;
+
+            if (categoriaFiltro === "Todos" || categoriaPin === categoriaFiltro) {
+                let $card = $("<div>").addClass("pin-card");
+                let $img = $("<img>").attr("src", urlS3);
+                let $title = $("<p>").text(titulo);
+
+                $card.append($img).append($title);
+                $card.click(function(){
+                    window.location.href = "detalle.html?id=" + id;
+                });
+
+                $("#feed-pines").append($card);
+            }
+        }
+    }
+
+    $.get("/publicaciones", function(pines){ // ◄--- MODIFICADO (Ruta Relativa)
+        todosLosPines = pines;
+        renderizarPines("Todos");
+    });
+
+    $(".btn-cat").click(function(){
+        $(".btn-cat").removeClass("active");
+        $(this).addClass("active");
+        
+        let catSeleccionada = $(this).attr("data-categoria");
+        renderizarPines(catSeleccionada);
+    });
+  </script>
+</body>
+</html>

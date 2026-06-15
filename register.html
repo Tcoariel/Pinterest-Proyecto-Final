@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro - Pinterest</title>
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Registro</h2>
+        <input type="text" id="nombre" placeholder="Nombre">
+        <input type="email" id="correo" placeholder="Correo">
+        <input type="password" id="password" placeholder="Contraseña">
+
+        <div style="margin: 15px 0; font-size: 13px; text-align: left; color: #5f5f5f; display: flex; gap: 8px; align-items: flex-start;">
+            <input type="checkbox" id="acepto-terminos" style="margin-top: 3px; cursor: pointer;">
+            <label for="acepto-terminos" style="cursor: pointer; line-height: 1.4;">
+                Acepto los Términos de Convivencia: Me comprometo a no subir imágenes con derechos de autor, contenido violento o que fomenten el acoso.
+            </label>
+        </div>
+
+        <button id="registrar">Crear cuenta</button>
+        <a href="login.html">Ya tengo cuenta</a>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+    $("#registrar").click(function(){
+        let nombreVal = $("#nombre").val().trim();
+        let correoVal = $("#correo").val().trim();
+        let passwordVal = $("#password").val().trim();
+
+        if(!nombreVal || !correoVal || !passwordVal) {
+            alert("Por favor, llena todos los campos.");
+            return;
+        }
+
+        if(!$("#acepto-terminos").is(":checked")) {
+            alert("Bloqueo Ético: Para registrarte es obligatorio aceptar las normas de responsabilidad comunitaria.");
+            return;
+        }
+
+        let datosFormulario = new FormData();
+        datosFormulario.append("nombre", nombreVal);
+        datosFormulario.append("correo", correoVal);
+        datosFormulario.append("password", passwordVal);
+
+        $.ajax({
+            url: "http://127.0.0.1:8000/registro",
+            type: "POST",
+            data: datosFormulario,
+            processData: false, 
+            contentType: false, 
+            success: function(respuesta){
+                alert("¡Usuario registrado con éxito!");
+                
+                localStorage.setItem("usuario_id", respuesta.usuario_id);
+                
+                window.location.href = "index.html";
+            },
+            error: function(){
+                alert("Ocurrió un error en el servidor al intentar registrar el usuario.");
+            }
+        });
+    });
+    </script>
+</body>
+</html>
