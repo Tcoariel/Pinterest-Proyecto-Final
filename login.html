@@ -23,7 +23,7 @@
         formData.append("password", $("#password").val());
 
         $.ajax({
-            url: "/login", // ◄--- MODIFICADO (Ruta Relativa)
+            url: "/login",
             type: "POST",
             data: formData,
             processData: false,
