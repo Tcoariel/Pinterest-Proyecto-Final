@@ -59,7 +59,7 @@
         $("#btn-cerrar-sesion").hide();
     }
 
-    $.get("/usuario/" + idUsuarioPerfil, function(usuario){ // ◄--- MODIFICADO (Ruta Relativa)
+    $.get("/usuario/" + idUsuarioPerfil, function(usuario){ 
         if(usuario && !usuario.mensaje) {
             $("#user-nombre").text(usuario.nombre);
             $("#user-correo").text(usuario.correo);
@@ -72,7 +72,7 @@
         }
     });
 
-    $.get("/usuario_publicaciones/" + idUsuarioPerfil, function(pines){ // ◄--- MODIFICADO (Ruta Relativa)
+    $.get("/usuario_publicaciones/" + idUsuarioPerfil, function(pines){ 
         $("#mis-pines").empty();
         
         if(!pines || pines.length === 0) {
