@@ -17,7 +17,7 @@ body {
   flex-direction: column;
 }
 
-/* --- SIDEBAR (Menú superior en móvil, lateral en PC)*/
+
 .sidebar {
   background-color: #ffffff;
   padding: 12px 20px;
@@ -60,13 +60,12 @@ body {
   color: #ffffff;
 }
 
-/* --- CONTENIDO --- */
+
 .main-content {
   flex: 1;
   padding: 16px;
 }
 
-/* --- BARRA DE PUBLICACIÓN ESTILO CLEAN --- */
 .top-header {
   background-color: #ffffff;
   padding: 16px 20px;
@@ -96,7 +95,7 @@ body {
   background-color: #ffffff;
 }
 
-/* Selector de archivos personalizado */
+
 .form-crear input[type="file"] {
   display: none;
 }
@@ -138,7 +137,6 @@ body {
 
 .form-crear button:hover { background-color: #ad001a; }
 
-/* --- GRILLA FLUIDA (MASONRY REAL) --- */
 .grid {
   column-count: 2;
   column-gap: 16px;
@@ -173,12 +171,11 @@ body {
   font-size: 14px;
 }
 
-/* --- RESPONSIVE TABLETS --- */
+
 @media (min-width: 650px) {
   .grid { column-count: 3; }
 }
 
-/* --- RESPONSIVE PC (Muestra todo tu potencial visual) --- */
 @media (min-width: 1024px) {
   .app-container { flex-direction: row; }
 
@@ -206,7 +203,7 @@ body {
   .menu-items a { display: block; width: 85%; }
   .main-content { margin-left: 200px; padding: 32px; }
 
-  /* El formulario se alinea automáticamente en horizontal en PC */
+
   .form-crear {
     flex-direction: row;
     align-items: center;
