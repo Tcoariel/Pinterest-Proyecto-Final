@@ -93,7 +93,7 @@
         $selectCat.append(new Option("Otros", "Otros"));
 
         let $wrapper = $("<div>").addClass("upload-wrapper");
-        let $labelFile = $("<label>").attr("for", "imagen-file").addClass("btn-file").text("📁 Seleccionar Imagen");
+        let $labelFile = $("<label>").attr("for", "imagen-file").addClass("btn-file").text(" Seleccionar Imagen");
         let $inputFile = $("<input>").attr({"type":"file", "id":"imagen-file", "accept":"image/*"});
         let $spanFile = $("<span>").attr("id", "nombre-archivo").text("Ningún archivo");
         $wrapper.append($labelFile).append($inputFile).append($spanFile);
@@ -127,7 +127,7 @@
             fd.append("file", fileObj);
 
             $.ajax({
-                url: "/publicacion", // ◄--- MODIFICADO (Ruta Relativa)
+                url: "/publicacion", 
                 type: "POST",
                 data: fd,
                 processData: false,
@@ -184,7 +184,7 @@
         }
     }
 
-    $.get("/publicaciones", function(pines){ // ◄--- MODIFICADO (Ruta Relativa)
+    $.get("/publicaciones", function(pines){ 
         todosLosPines = pines;
         renderizarPines("Todos");
     });
