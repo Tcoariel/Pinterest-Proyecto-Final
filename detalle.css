@@ -30,7 +30,6 @@ body {
 }
 .btn-back:hover { background-color: #d6d6d6; }
 
-/* --- CONTENEDOR TARJETA DETALLE --- */
 .card-detalle {
   background: #ffffff;
   border-radius: 32px;
@@ -84,7 +83,6 @@ body {
   margin: 24px 0;
 }
 
-/* --- COMENTARIOS --- */
 #lista-comentarios {
   max-height: 180px;
   overflow-y: auto;
@@ -101,7 +99,6 @@ body {
   line-height: 1.4;
 }
 
-/* --- CONTROL INPUT COMENTAR --- */
 .input-comentario-group {
   display: flex;
   gap: 12px;
@@ -131,7 +128,6 @@ body {
 
 .input-comentario-group button:hover { background: #222222; }
 
-/* --- TRATAMIENTO DE PANTALLA PC HORIZONTAL --- */
 @media (min-width: 768px) {
   .card-detalle { flex-direction: row; }
   .box-imagen { width: 50%; display: flex; align-items: center; }
