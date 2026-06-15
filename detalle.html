@@ -65,12 +65,14 @@
     let idPub = urlParams.get("id");
     let sessionUserId = localStorage.getItem("usuario_id");
 
+    
+
     $.get("/publicacion/" + idPub, function(pub){ 
         if(pub) {
-            $("#pub-titulo").text(pub.titulo);
-            $("#pub-descripcion").text(pub.descripcion ? pub.descripcion : "Sin descripción.");
-            $("#pub-imagen").attr("src", pub.imagen);
-            $("#pub-usuario").text(pub.autor_nombre);
+          $("#pub-titulo").text(pub.titulo);
+          $("#pub-descripcion").text(pub.descripcion ? pub.descripcion : "Sin descripción.");
+          $("#pub-imagen").attr("src", pub.imagen);
+          $("#pub-usuario").text(pub.autor_nombre);
         }
     });
 
@@ -94,7 +96,9 @@
                 $box.append($user).append($msg);
                 $("#lista-comentarios").append($box);
             }
-        });
+        }
+             );
+      
     }
 
     if(sessionUserId) {
