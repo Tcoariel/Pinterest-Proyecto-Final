@@ -94,7 +94,8 @@ def publicaciones():
             "descripcion": pin[2],
             "imagen": pin[3],
             "categoria": pin[4] if pin[4] else "Otros"
-        })
+        }
+                        )
     return resultado
 
 @app.get("/publicacion/{id}")
@@ -105,7 +106,8 @@ def publicacion_id(id: int):
         FROM publicaciones p 
         LEFT JOIN usuarios u ON p.usuario_id = u.id 
         WHERE p.id=?
-    """, (id,))
+    """, 
+                   (id,))
     pub = cursor.fetchone()
     if pub:
         return {
@@ -117,6 +119,7 @@ def publicacion_id(id: int):
             "creado_en": pub[5],
             "autor_nombre": pub[6]
         }
+        
     return None
 
 @app.get("/usuario/{id}")
@@ -165,7 +168,8 @@ def comentarios(id: int):
         LEFT JOIN usuarios u ON c.usuario_id = u.id 
         WHERE c.publicacion_id=?
         ORDER BY c.id DESC
-    """, (id,))
+    """, 
+                   (id,))
     return cursor.fetchall()
 
 app.mount("/", StaticFiles(directory=".", html=True), name="static")
